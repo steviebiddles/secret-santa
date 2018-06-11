@@ -20,9 +20,10 @@ namespace SecretSanta.Pages.Events
 			this.db = context;
 		}
 
+		[HttpGet("events", Name = "events_index")]
 		public async Task OnGetAsync()
 		{
-			Events = await db.Events.ToListAsync();
+			Events = await this.db.Events.ToListAsync();
 		}
 	}
 }

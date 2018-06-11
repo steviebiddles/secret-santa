@@ -3,15 +3,23 @@
 @{
 }
 <div class="container">
+    
     <div class="row">
-        <div class="col-xs-12">
+        
+        <div class="col">
+            
             <h2>Events</h2>
             <ul>
                 @foreach (var item in Model.Events)
                 {
-                    <li>@Html.DisplayFor(modelItem => item.Id): @Html.DisplayFor(modelItem => item.Name)</li>
+                <li>
+                    <a asp-route="events_show" asp-route-Id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                </li>
                 }
             </ul>
+
         </div>
+
     </div>
+
 </div>

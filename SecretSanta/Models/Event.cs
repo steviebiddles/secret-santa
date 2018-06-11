@@ -11,7 +11,7 @@ namespace SecretSanta.Models
         public int Id { get; set; }
 
 		[Required]
-		[Column("name")]
+		[Column("name", TypeName = "varchar(128)")]
         public string Name { get; set; }
     }
 }
