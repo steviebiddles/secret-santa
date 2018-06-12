@@ -2,19 +2,20 @@
 @model SecretSanta.Pages.Events.IndexModel
 @{
 }
+
 <div class="container">
-    
+
     <div class="row">
-        
+
         <div class="col">
-            
-            <h2>Events</h2>
+
+            <h2>Events <a asp-page="new" class="btn btn-primary btn-small pull-right">New</a></h2>
             <ul>
                 @foreach (var item in Model.Events)
                 {
-                <li>
-                    <a asp-route="events_show" asp-route-Id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-                </li>
+                    <li>
+                        <a asp-page="show" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    </li>
                 }
             </ul>
 

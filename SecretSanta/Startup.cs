@@ -20,6 +20,7 @@ namespace SecretSanta
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddDbContext<SecretSantaContext>();
+			services.AddRouting(options => options.LowercaseUrls = true);
 			services.AddMvc();
 		}
 

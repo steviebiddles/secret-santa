@@ -20,7 +20,6 @@ namespace SecretSanta.Pages.Events
 			this.db = context;
 		}
 
-		[HttpGet("events/{id:int}", Name = "events_show")]
 		public async Task<IActionResult> OnGetAsync(int? id)
 		{
 			if (id == null) {
