@@ -10,7 +10,7 @@ namespace SecretSanta.Pages.Events
         private readonly SecretSanta.Data.SecretSantaContext db;
         
         [BindProperty]
-        public string Name { get; set; }
+        public EventRequest EventRequest { get; set; }
         
         public NewModel(SecretSanta.Data.SecretSantaContext context)
         {
@@ -31,7 +31,7 @@ namespace SecretSanta.Pages.Events
 
             var Event = new Event
             {
-                Name = Request.Form["name"]
+                Name = EventRequest.Name
             };
             
             this.db.Events.Add(Event);
