@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SecretSanta.Models
+namespace SecretSanta.Requests
 {
     public class EventRequest
     {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SecretSanta.Models;
+using SecretSanta.Requests;
 
 namespace SecretSanta.Pages.Events
 {
