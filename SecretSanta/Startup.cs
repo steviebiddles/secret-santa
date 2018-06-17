@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SecretSanta.Data;
 using Swashbuckle.AspNetCore.Swagger;
+using SecretSanta.Repositories;
 
 namespace SecretSanta
 {
@@ -21,6 +22,8 @@ namespace SecretSanta
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddDbContext<SecretSantaContext>();
+            services.AddScoped<IEventsRepository, EventsRepository>();
+
 			services.AddRouting(options => options.LowercaseUrls = true);
 			services.AddMvc();
 

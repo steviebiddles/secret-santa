@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Data;
 using SecretSanta.Models;
 using SecretSanta.Requests;
+using SecretSanta.Repositories;
 
 namespace SecretSanta.Controllers.Api.v1
 {
@@ -13,30 +14,30 @@ namespace SecretSanta.Controllers.Api.v1
     [Route("api/v1/events")]
     public class EventsController : Controller
     {
-        private readonly SecretSantaContext db;
+        private readonly IEventsRepository eventsRepository;
 
-        public EventsController(SecretSantaContext context)
+        public EventsController(IEventsRepository eventsRepository)
         {
-            this.db = context;
+            this.eventsRepository = eventsRepository;
         }
 
         [HttpGet(Name = "ApiV1GetEvents")]
         public IEnumerable<Event> GetAll()
         {
-            return this.db.Events.ToList();
+            return this.eventsRepository.FindAll();
         }
 
         [HttpGet("{id}", Name = "ApiV1GetEvent")]
         public IActionResult GetOne(int id)
         {
-            var item = this.db.Events.Find(id);
+            var @event = this.eventsRepository.FindById(id);
 
-            if (item == null)
+            if (@event != null)
             {
-                return NotFound();
+                return this.Ok(@event);
             }
 
-            return Ok(item);
+            return this.NotFound();
         }
 
         /// <summary>
@@ -44,43 +45,56 @@ namespace SecretSanta.Controllers.Api.v1
         /// </summary>
         /// <remarks>
         /// Sample request:
-        ///
         ///     POST /events
         ///     {
         ///        "name": "Name of sample event"
         ///     }
-        ///
         /// </remarks>
+        /// <param name="eventRequest">Event request.</param>
+        /// <returns>Location if successful.</returns> 
         [HttpPost(Name = "ApiV1PostEvent")]
         public IActionResult Post([FromBody] EventRequest eventRequest)
         {
-            if (eventRequest == null)
-            {
-                return BadRequest();
-            }
-
             if (!ModelState.IsValid)
             {
-                return BadRequest(eventRequest);
+                return this.BadRequest(eventRequest);
             }
 
-            var item = new Event
+            var @event = new Event
             {
                 Name = eventRequest.Name
             };
 
-            this.db.Events.Add(item);
-            this.db.SaveChanges();
+            @event = this.eventsRepository.Save(@event);
 
-            return CreatedAtRoute("ApiV1GetEvent", new { id = item.Id }, item);
+            if (@event != null)
+            {
+                return this.CreatedAtRoute("ApiV1GetEvent", new { id = @event.Id }, null);
+            }
+
+            return this.BadRequest();
         }
 
-        [HttpPatch("{id}", Name = "ApiV1PatchEvent")]
-        public void Patch(int id, [FromBody]string value)
+        [HttpPatch("{id}", Name = "ApiV1PutEvent")]
+        public IActionResult Patch(int id, [FromBody] EventRequest eventRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return this.BadRequest(eventRequest);
+            }
+
+            var @event = this.eventsRepository.FindById(id);
+            @event.Name = eventRequest.Name;
+
+            if (this.eventsRepository.Save(@event, true) != null)
+            {
+                return this.NoContent();
+            }
+
+            return this.BadRequest();
         }
 
-        [HttpPut("{id}", Name = "ApiV1PutEvent")]
+        [HttpPut("{id}", Name = "ApiV1PatchEvent")]
         public void Put(int id, [FromBody]string value)
         {
         }
@@ -88,17 +102,19 @@ namespace SecretSanta.Controllers.Api.v1
         [HttpDelete("{id}", Name = "ApiV1DeleteEvent")]
         public IActionResult Delete(int id)
         {
-            var item = this.db.Events.Find(id);
+            var @event = this.eventsRepository.FindById(id);
 
-            if (item == null)
+            if (@event == null)
             {
-                return NotFound();
+                return this.NotFound();
             }
 
-            this.db.Events.Remove(item);
-            this.db.SaveChanges();
+            if (this.eventsRepository.Delete(@event))
+            {
+                return this.NoContent();
+            }
 
-            return NoContent();
+            return this.BadRequest();
         }
     }
 }
