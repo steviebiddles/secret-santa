@@ -3,5 +3,6 @@ language: bash
 deploy:
   provider: script
   script: bash scripts/wiki.sh
+  skip_cleanup: true
   on:
     branch: master
