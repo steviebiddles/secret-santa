@@ -1,3 +1,5 @@
+language: bash
+
 deploy:
   provider: script
   script: bash scripts/wiki.sh
